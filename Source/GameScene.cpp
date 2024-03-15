@@ -1,5 +1,10 @@
 #include "GameScene.h"
 
+#include "BoardSprite.h"
+
+#define OUTSIDE_SPACE 20
+#define SCORE_TAG 0x82
+
 USING_NS_AX;
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -12,8 +17,6 @@ static void problemLoading(const char *filename) {
 
 // on "init" you need to initialize your instance
 bool GameScene::init() {
-    //////////////////////////////
-    // 1. super init first
     if (!Scene::init()) {
         return false;
     }
@@ -22,10 +25,6 @@ bool GameScene::init() {
     auto origin = _director->getVisibleOrigin();
     auto safeArea = _director->getSafeAreaRect();
     auto safeOrigin = safeArea.origin;
-
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
 
     // add a "close" icon to exit the progress. it's an autorelease object
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
@@ -44,9 +43,6 @@ bool GameScene::init() {
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-    /////////////////////////////
-    // 3. add your codes below...
-
     // Some templates (uncomment what you  need)
     auto touchListener = EventListenerTouchAllAtOnce::create();
     touchListener->onTouchesBegan = AX_CALLBACK_2(GameScene::onTouchesBegan, this);
@@ -54,50 +50,27 @@ bool GameScene::init() {
     touchListener->onTouchesEnded = AX_CALLBACK_2(GameScene::onTouchesEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-    //auto mouseListener           = EventListenerMouse::create();
-    //mouseListener->onMouseMove   = AX_CALLBACK_1(GameScene::onMouseMove, this);
-    //mouseListener->onMouseUp     = AX_CALLBACK_1(GameScene::onMouseUp, this);
-    //mouseListener->onMouseDown   = AX_CALLBACK_1(GameScene::onMouseDown, this);
-    //mouseListener->onMouseScroll = AX_CALLBACK_1(GameScene::onMouseScroll, this);
-    //_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 
-    //auto keyboardListener           = EventListenerKeyboard::create();
-    //keyboardListener->onKeyPressed  = AX_CALLBACK_2(GameScene::onKeyPressed, this);
-    //keyboardListener->onKeyReleased = AX_CALLBACK_2(GameScene::onKeyReleased, this);
-    //_eventDispatcher->addEventListenerWithFixedPriority(keyboardListener, 11);
+    auto drawNode = DrawNode::create();
+    drawNode->setPosition(Vec2(0, 0));
+    addChild(drawNode);
 
+    drawNode->drawRect(safeArea.origin + Vec2(1, 1), safeArea.origin + safeArea.size - Vec2(1, 1), Color4F::BLUE);
 
+    // Center algorithm
+    auto board = BoardSprite::create(visibleSize.height - OUTSIDE_SPACE, 4);
+    auto tempBoardSize = Vec2{visibleSize.height - OUTSIDE_SPACE, visibleSize.height - OUTSIDE_SPACE};
+    auto position = (visibleSize - tempBoardSize) / 2;
+    board->setPosition(position);
+    addChild(board);
 
-    // add a label shows "Hello World"
-    // create and initialize a label
-
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    if (label == nullptr) {
-        problemLoading("'fonts/Marker Felt.ttf'");
-    } else {
-        // position the label on the center of the screen
-        label->setPosition(
-                Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - label->getContentSize().height));
-
-        // add the label as a child to this layer
-        this->addChild(label, 1);
-    }
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png"sv);
-    if (sprite == nullptr) {
-        problemLoading("'HelloWorld.png'");
-    } else {
-        // position the sprite on the center of the screen
-        sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-
-        // add the sprite as a child to this layer
-        this->addChild(sprite, 0);
-        auto drawNode = DrawNode::create();
-        drawNode->setPosition(Vec2(0, 0));
-        addChild(drawNode);
-
-        drawNode->drawRect(safeArea.origin + Vec2(1, 1), safeArea.origin + safeArea.size, Color4F::BLUE);
-    }
+    score = 0;
+    auto scoreLabel = Label::createWithTTF("Score:0000", "fonts/Marker Felt.ttf", 24);
+    scoreLabel->setPosition(
+            Vec2(scoreLabel->getContentSize().width / 2 + 10,
+                 origin.y + visibleSize.height - scoreLabel->getContentSize().height));
+    scoreLabel->setTag(SCORE_TAG);
+    this->addChild(scoreLabel, 1);
 
     // scheduleUpdate() is required to ensure update(float) is called on every loop
     scheduleUpdate();
@@ -105,6 +78,14 @@ bool GameScene::init() {
     return true;
 }
 
+void GameScene::updateScore(uint64_t score) {
+    this->score = score;
+    std::stringstream ss;
+    ss << "Score: ";
+    ss << score;
+    auto scoreLabel = (Label*) this->getChildByTag(SCORE_TAG);
+    scoreLabel->setString(StringUtils::format("Score:%04llu", score));
+}
 
 void GameScene::onTouchesBegan(const std::vector<ax::Touch *> &touches, ax::Event *event) {
     for (auto &&t: touches) {
@@ -124,34 +105,6 @@ void GameScene::onTouchesEnded(const std::vector<ax::Touch *> &touches, ax::Even
     }
 }
 
-void GameScene::onMouseDown(Event *event) {
-    EventMouse *e = static_cast<EventMouse *>(event);
-    AXLOG("onMouseDown detected, Key: %d", static_cast<int>(e->getMouseButton()));
-}
-
-void GameScene::onMouseUp(Event *event) {
-    EventMouse *e = static_cast<EventMouse *>(event);
-    AXLOG("onMouseUp detected, Key: %d", static_cast<int>(e->getMouseButton()));
-}
-
-void GameScene::onMouseMove(Event *event) {
-    EventMouse *e = static_cast<EventMouse *>(event);
-    AXLOG("onMouseMove detected, X:%f  Y:%f", e->getCursorX(), e->getCursorY());
-}
-
-void GameScene::onMouseScroll(Event *event) {
-    EventMouse *e = static_cast<EventMouse *>(event);
-    AXLOG("onMouseScroll detected, X:%f  Y:%f", e->getScrollX(), e->getScrollY());
-}
-
-void GameScene::onKeyPressed(EventKeyboard::KeyCode code, Event *event) {
-    AXLOG("onKeyPressed, keycode: %d", static_cast<int>(code));
-}
-
-void GameScene::onKeyReleased(EventKeyboard::KeyCode code, Event *event) {
-    AXLOG("onKeyReleased, keycode: %d", static_cast<int>(code));
-}
-
 void GameScene::update(float delta) {
     switch (_gameState) {
         case GameState::init: {
@@ -160,45 +113,13 @@ void GameScene::update(float delta) {
         }
 
         case GameState::update: {
-            /////////////////////////////
-            // Add your codes below...like....
-            //
-            // UpdateJoyStick();
-            // UpdatePlayer();
-            // UpdatePhysics();
-            // ...
             break;
         }
 
         case GameState::pause: {
-            /////////////////////////////
-            // Add your codes below...like....
-            //
-            // anyPauseStuff()
-
-            break;
         }
 
-        case GameState::menu1: {    /////////////////////////////
-            // Add your codes below...like....
-            //
-            // UpdateMenu1();
-            break;
-        }
-
-        case GameState::menu2: {    /////////////////////////////
-            // Add your codes below...like....
-            //
-            // UpdateMenu2();
-            break;
-        }
-
-        case GameState::end: {    /////////////////////////////
-            // Add your codes below...like....
-            //
-            // CleanUpMyCrap();
-            menuCloseCallback(this);
-            break;
+        case GameState::end: {
         }
 
     } //switch

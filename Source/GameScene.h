@@ -9,9 +9,7 @@ class GameScene : public ax::Scene {
         init = 0,
         update,
         pause,
-        end,
-        menu1,
-        menu2,
+        end
     };
 
 public:
@@ -26,25 +24,15 @@ public:
 
     void onTouchesEnded(const std::vector<ax::Touch *> &touches, ax::Event *event);
 
-    // mouse
-    void onMouseDown(ax::Event *event);
-
-    void onMouseUp(ax::Event *event);
-
-    void onMouseMove(ax::Event *event);
-
-    void onMouseScroll(ax::Event *event);
-
-    // Keyboard
-    void onKeyPressed(ax::EventKeyboard::KeyCode code, ax::Event *event);
-
-    void onKeyReleased(ax::EventKeyboard::KeyCode code, ax::Event *event);
-
     // a selector callback
     void menuCloseCallback(Ref *sender);
 
+    void updateScore(uint64_t score);
+
 private:
     GameState _gameState = GameState::init;
+
+    uint64_t score = 0;
 };
 
 #endif  // __GAME_SCENE_H__
