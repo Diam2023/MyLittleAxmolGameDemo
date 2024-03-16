@@ -29,24 +29,24 @@ public:
         return boardNumber;
     }
 
-    void setBoardNumber(uint8_t boardNumber) {
-        BoardSprite::boardNumber = boardNumber;
+    void setBoardNumber(uint8_t boardNumber_) {
+        BoardSprite::boardNumber = boardNumber_;
     }
 
     const ax::Vec2 &getBoardSize() const {
         return boardSize;
     }
 
-    void setBoardSize(const ax::Vec2 &boardSize) {
-        BoardSprite::boardSize = boardSize;
+    void setBoardSize(const ax::Vec2 &boardSize_) {
+        BoardSprite::boardSize = boardSize_;
     }
 
     const ax::Vec2 &getBoardBlockSize() const {
         return boardBlockSize;
     }
 
-    void setBoardBlockSize(const ax::Vec2 &boardBlockSize) {
-        BoardSprite::boardBlockSize = boardBlockSize;
+    void setBoardBlockSize(const ax::Vec2 &boardBlockSize_) {
+        BoardSprite::boardBlockSize = boardBlockSize_;
     }
 
     /**
