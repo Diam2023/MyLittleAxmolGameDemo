@@ -3,14 +3,26 @@
 
 #include "axmol.h"
 
+/**
+ * BoardSprite use for display the board of game
+ */
 class BoardSprite : public ax::Sprite {
 
 protected:
-    uint8_t boardNumber;
+    /**
+     * How many block on one line in board
+     */
+    uint8_t boardNumber = 0;
 
-    ax::Vec2 boardSize;
+    /**
+     * Size of the board
+     */
+    ax::Vec2 boardSize = {0, 0};
 
-    ax::Vec2 boardBlockSize;
+    /**
+     * Size of a block
+     */
+    ax::Vec2 boardBlockSize = {0, 0};
 public:
 
     uint8_t getBoardNumber() const {
@@ -51,6 +63,13 @@ public:
      */
     ax::Rect getBlockByBlockIndex(std::pair<uint8_t, uint8_t> blockIndex) const;
 
+    /**
+     * Generate random index block
+     * @return pair random index
+     */
+    std::pair<uint8_t, uint8_t> randomBlock();
+
+
 public:
 
     /**
@@ -60,8 +79,6 @@ public:
      * @return BoardSprite
      */
     static BoardSprite *create(float size, uint8_t split);
-
-
 };
 
 #endif //MYGAMEDEMO_BOARDSPRITE_H

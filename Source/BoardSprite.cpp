@@ -59,5 +59,10 @@ ax::Rect BoardSprite::getBlockByBlockIndex(std::pair<uint8_t, uint8_t> blockInde
     return rec;
 }
 
+std::pair<uint8_t, uint8_t> BoardSprite::randomBlock() {
+    return std::make_pair((uint8_t) RandomHelper::random_int(0, (int) boardNumber),
+                          (uint8_t) RandomHelper::random_int(0, (int) boardNumber));
+}
+
 
 
