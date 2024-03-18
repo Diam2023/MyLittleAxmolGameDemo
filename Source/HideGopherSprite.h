@@ -1,0 +1,16 @@
+//
+// Created by 35691 on 3/18/2024.
+//
+
+#ifndef MYGAMEDEMO_HIDEGOPHERSPRITE_H
+#define MYGAMEDEMO_HIDEGOPHERSPRITE_H
+
+
+
+class HideGopherSprite {
+
+};
+
+
+
+#endif //MYGAMEDEMO_HIDEGOPHERSPRITE_H

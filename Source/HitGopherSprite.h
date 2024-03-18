@@ -1,0 +1,16 @@
+//
+// Created by 35691 on 3/18/2024.
+//
+
+#ifndef MYGAMEDEMO_HITGOPHERSPRITE_H
+#define MYGAMEDEMO_HITGOPHERSPRITE_H
+
+
+
+class HitGopherSprite {
+
+};
+
+
+
+#endif //MYGAMEDEMO_HITGOPHERSPRITE_H
