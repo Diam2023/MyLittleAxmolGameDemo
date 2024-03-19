@@ -36,8 +36,9 @@ BoardSprite *BoardSprite::create(float size, uint8_t split) {
 }
 
 std::pair<int16_t, int16_t> BoardSprite::getBlockIndexByPosition(const Vec2 &pos) {
+    // TODO Rewrite argument Vec2 to Rec
     auto res = std::make_pair(-1, -1);
-    if (pos < boardSize) {
+    if (pos < boardSize && pos > Vec2::ZERO) {
         // legal
 
         auto targetPosition = pos / boardBlockSize;
