@@ -5,12 +5,16 @@
 #ifndef MYGAMEDEMO_GOPHERSPRITE_H
 #define MYGAMEDEMO_GOPHERSPRITE_H
 
+#include <axmol.h>
 
+class GopherSprite : public ax::Sprite {
 
-class GopherSprite {
+public:
 
+    GopherSprite *create(ax::Rect position_);
+
+private:
 };
-
 
 
 #endif //MYGAMEDEMO_GOPHERSPRITE_H

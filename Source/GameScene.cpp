@@ -227,24 +227,20 @@ void GameScene::onTouchesEnded(const std::vector<ax::Touch *> &touches, ax::Even
 
 
 void GameScene::update(float delta) {
-    BoardSprite *boardSprite = nullptr;
+    auto boardSprite = (BoardSprite *) this->getChildByTag(BOARD_TAG);
 
     // Assert initialize
-    Vec2 startSpace;
-    Vec2 endSpace;
+    auto startSpace = (_director->getVisibleSize() - boardSprite->getBoardSize()) / 2;
+    auto endSpace = startSpace + boardSprite->getBoardSize();
 
     switch (_gameState) {
         case GameState::init: {
-            boardSprite = (BoardSprite *) this->getChildByTag(BOARD_TAG);
-
-            startSpace = (_director->getVisibleSize() - boardSprite->getBoardSize()) / 2;
-            endSpace = startSpace + boardSprite->getBoardSize();
-
             _gameState = GameState::update;
             break;
         }
 
         case GameState::update: {
+            // If need
             if (boardSprite == nullptr) {
                 boardSprite = (BoardSprite *) this->getChildByTag(BOARD_TAG);
                 if (boardSprite == nullptr) {

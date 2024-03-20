@@ -3,3 +3,14 @@
 //
 
 #include "GopherSprite.h"
+
+
+GopherSprite *GopherSprite::create(ax::Rect position_) {
+    auto gopher = new GopherSprite();
+
+    if (gopher->init()) {
+        gopher->autorelease();
+        return gopher;
+    }
+    AX_SAFE_DELETE(gopher);
+}
