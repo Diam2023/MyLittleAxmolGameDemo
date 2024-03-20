@@ -24,7 +24,7 @@ public:
      * @param position_
      * @return
      */
-    GopherSprite *create(ax::Rect position_);
+    static GopherSprite *create(const ax::Rect &position_, const ax::Vec2 &boardOffset = {0, 0});
 
     GopherStatus getStatus() {
         return status;
@@ -35,6 +35,8 @@ public:
             score_ = score;
             status = GopherStatus::Show;
             updateDisplay();
+
+            // timer to hide
         }
     }
 
@@ -50,7 +52,6 @@ public:
         return score;
     }
 
-protected:
     void updateDisplay();
 
 private:

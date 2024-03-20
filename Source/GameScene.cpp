@@ -8,6 +8,9 @@
 #define WEAPON_TAG 0x52
 #define BOARD_TAG  0x42
 
+// line of the board
+#define BOARD_NUM 4
+
 #define RANDOM_POP_TIMER_NAME "RandomPopTimer"
 #define RANDOM_POP_TIMER_SPLIT 160.f
 
@@ -88,7 +91,7 @@ bool GameScene::init() {
     drawNode->drawRect(safeArea.origin + Vec2(1, 1), safeArea.origin + safeArea.size - Vec2(1, 1), Color4F::BLUE);
 
     // Center algorithm
-    auto board = BoardSprite::create(visibleSize.height - OUTSIDE_SPACE, 4);
+    auto board = BoardSprite::create(visibleSize.height - OUTSIDE_SPACE, BOARD_NUM);
     auto tempBoardSize = Vec2{visibleSize.height - OUTSIDE_SPACE, visibleSize.height - OUTSIDE_SPACE};
     auto position = (visibleSize - tempBoardSize) / 2;
     board->setPosition(position);
@@ -235,6 +238,17 @@ void GameScene::update(float delta) {
 
     switch (_gameState) {
         case GameState::init: {
+
+            for (uint8_t x = 0; x < BOARD_NUM; x++) {
+                for (uint8_t y = 0; y < BOARD_NUM; y++) {
+                    auto gopher = GopherSprite::create(boardSprite->getBlockByBlockIndex({x, y}),
+                                                       startSpace + (boardSprite->getBoardBlockSize() / 2));
+                    gophers[{x, y}] = gopher;
+                    addChild(gopher, 0);
+                }
+            }
+
+
             _gameState = GameState::update;
             break;
         }
@@ -260,10 +274,10 @@ void GameScene::update(float delta) {
 
                         // inner
                         if (auto gopher = gophers.find(posIndex);
-                                ((gopher != gophers.end()) && (*gopher).second != 0)) {
+                                ((gopher != gophers.end()) && **(*gopher).second > 0)) {
                             // Add score
-                            updateScore(score + (*gopher).second);
-                            AXLOG("Score+ %d", (*gopher).second);
+                            updateScore(score + **((*gopher).second));
+                            AXLOG("Score+ %d", **((*gopher).second));
                             // TODO wait play some hit action
                         }
 

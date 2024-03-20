@@ -2,6 +2,7 @@
 #define __GAME_SCENE_H__
 
 #include "axmol.h"
+#include "GopherSprite.h"
 
 
 #define IS_PC (AX_TARGET_PLATFORM == AX_PLATFORM_WIN32) || (AX_TARGET_PLATFORM == AX_PLATFORM_MAC) || \
@@ -71,7 +72,7 @@ private:
 
     // prepare a score
     // default is -1
-    std::map<std::pair<uint8_t, uint8_t>, uint8_t> gophers;
+    std::map<std::pair<uint8_t, uint8_t>, GopherSprite *> gophers;
 
     std::queue<ax::Vec2> hitPosition;
 };

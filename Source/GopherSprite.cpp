@@ -5,17 +5,14 @@
 #include "GopherSprite.h"
 
 
-GopherSprite *GopherSprite::create(ax::Rect position_) {
+GopherSprite *GopherSprite::create(const ax::Rect &position_, const ax::Vec2 &boardOffset) {
     auto gopher = new GopherSprite();
-    updateDisplay();
-    gopher->setPosition(position_.origin);
+    gopher->updateDisplay();
+    gopher->setPosition(position_.origin + boardOffset);
     gopher->setContentSize(position_.size);
 
-    if (gopher->init()) {
-        gopher->autorelease();
-        return gopher;
-    }
-    AX_SAFE_DELETE(gopher);
+    gopher->autorelease();
+    return gopher;
 }
 
 void GopherSprite::updateDisplay() {
