@@ -12,7 +12,7 @@
 #define BOARD_NUM 4
 
 #define RANDOM_POP_TIMER_NAME "RandomPopTimer"
-#define RANDOM_POP_TIMER_SPLIT 160.f
+#define RANDOM_POP_TIMER_SPLIT 1.6f
 
 USING_NS_AX;
 
@@ -123,8 +123,8 @@ bool GameScene::init() {
 #endif
 
     // TODO Waiting test
-//    this->schedule(AX_CALLBACK_1(GameScene::randomPopGophersTimer, this), RANDOM_POP_TIMER_SPLIT,
-//                   RANDOM_POP_TIMER_NAME);
+    this->schedule(AX_CALLBACK_1(GameScene::randomPopGophersTimer, this), RANDOM_POP_TIMER_SPLIT,
+                   RANDOM_POP_TIMER_NAME);
 
     scheduleUpdate();
 
@@ -142,25 +142,39 @@ R getRetValue(R(C::*)(Args...));
 
 void GameScene::randomPopGophersTimer(float dt) {
 
-//    auto boardSprite = (BoardSprite *) this->getChildByTag(BOARD_TAG);
-//
-//    int8_t limit = 3;
-//    auto res = this->gophers.end();
-//    decltype(getRetValue(&BoardSprite::randomBlock)) randomBlock;
-//
-//    do {
-//        randomBlock = boardSprite->randomBlock();
-//        res = this->gophers.find(randomBlock);
-//        limit--;
-//        if (limit <= 0) {
-//            return;
-//        }
-//    } while (res != this->gophers.end());
-//
-//    auto gopher = GopherSprite::create(boardSprite->getBlockByBlockIndex(randomBlock));
-//    addChild(gopher);
-//    gophers[randomBlock] = gopher;
+    auto boardSprite = (BoardSprite *) this->getChildByTag(BOARD_TAG);
 
+    int8_t limit = 3;
+    auto res = this->gophers.end();
+    std::pair <uint8_t, uint8_t> randomBlock;
+
+    do {
+        randomBlock = boardSprite->randomBlock();
+        res = this->gophers.find(randomBlock);
+        limit--;
+        if (limit <= 0) {
+            return;
+        }
+    } while ((res != this->gophers.end()) && ((*res).second->getStatus() != GopherStatus::Hide));
+
+    auto randomScore = RandomHelper::random_int(10, 30);
+    gophers[randomBlock]->pop(randomScore);
+    // Prepare Random Hide Time
+    auto gopher = gophers[randomBlock];
+
+    std::stringstream ss;
+    ss << "TIMER:";
+    ss << randomBlock.first;
+    ss << ":";
+    ss << randomBlock.second;
+
+    this->schedule([gopher](float) {
+                       gopher->hide();
+                   },
+                   .1f * randomScore,
+                   1,
+                   .1f * randomScore,
+                   ss.str());
 }
 
 #if IS_PC
