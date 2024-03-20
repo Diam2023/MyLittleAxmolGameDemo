@@ -7,26 +7,22 @@
 
 GopherSprite *GopherSprite::create(const ax::Rect &position_, const ax::Vec2 &boardOffset) {
     auto gopher = new GopherSprite();
+    gopher->setArea({position_.origin + boardOffset, position_.size});
     gopher->updateDisplay();
-    gopher->setPosition(position_.origin + boardOffset);
-    gopher->setContentSize(position_.size);
 
     gopher->autorelease();
     return gopher;
 }
 
 void GopherSprite::updateDisplay() {
-    switch (status) {
+    if (status == GopherStatus::Show) {
+        initWithFile("res/pop.png");
+    } else {
+        initWithFile("res/hide.png");
+    }
 
-        case GopherStatus::Show: {
-            initWithFile("res/pop.png");
-        }
-
-        case GopherStatus::Hide: {
-            initWithFile("res/hide.png");
-        }
-    };
-
+    setPosition(area.origin);
+    setContentSize(area.size);
 }
 
 

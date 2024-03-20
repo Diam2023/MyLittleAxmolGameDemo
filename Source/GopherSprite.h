@@ -12,8 +12,13 @@ enum class GopherStatus {
     Show
 };
 
+class TimerAdapter {
+public:
+    virtual void func(float) = 0;
+};
 
-class GopherSprite : public ax::Sprite {
+
+class GopherSprite : public ax::Sprite, public TimerAdapter {
 
 public:
 
@@ -35,9 +40,13 @@ public:
             score_ = score;
             status = GopherStatus::Show;
             updateDisplay();
-
             // timer to hide
         }
+    }
+
+    void func(float dt) {
+        AXLOG("call");
+        hide();
     }
 
     void hide() {
@@ -54,9 +63,15 @@ public:
 
     void updateDisplay();
 
+    void setArea(const ax::Rect &area_) {
+        area = area_;
+    }
+
 private:
 
     GopherStatus status;
+
+    ax::Rect area;
 
     int score;
 };
