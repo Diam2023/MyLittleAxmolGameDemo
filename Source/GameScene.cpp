@@ -12,7 +12,7 @@
 #define BOARD_NUM 4
 
 #define RANDOM_POP_TIMER_NAME "RandomPopTimer"
-#define RANDOM_POP_TIMER_SPLIT 1.6f
+#define RANDOM_POP_TIMER_SPLIT 1.f
 
 USING_NS_AX;
 
@@ -146,7 +146,7 @@ void GameScene::randomPopGophersTimer(float dt) {
 
     int8_t limit = 3;
     auto res = this->gophers.end();
-    std::pair <uint8_t, uint8_t> randomBlock;
+    std::pair<uint8_t, uint8_t> randomBlock;
 
     do {
         randomBlock = boardSprite->randomBlock();
@@ -163,7 +163,7 @@ void GameScene::randomPopGophersTimer(float dt) {
     auto gopher = gophers[randomBlock];
 
     std::stringstream ss;
-    ss << "TIMER:";
+    ss << "HIDE:";
     ss << randomBlock.first;
     ss << ":";
     ss << randomBlock.second;
@@ -180,7 +180,7 @@ void GameScene::randomPopGophersTimer(float dt) {
 #if IS_PC
 
 void GameScene::onMouseDown(Event *event) {
-    EventMouse *e = static_cast<EventMouse *>(event);
+    auto *e = dynamic_cast<EventMouse *>(event);
 //    AXLOG("onMouseDown detected, Key: %d", static_cast<int>(e->getMouseButton()));
 
     auto weaponSprite = (Sprite *) this->getChildByTag(WEAPON_TAG);
@@ -190,23 +190,15 @@ void GameScene::onMouseDown(Event *event) {
 }
 
 void GameScene::onMouseUp(Event *event) {
-//    EventMouse *e = static_cast<EventMouse *>(event);
-//    AXLOG("onMouseUp detected, Key: %d", static_cast<int>(e->getMouseButton()));
 }
 
 void GameScene::onMouseMove(Event *event) {
-    // updateScore(score + 1);
-    EventMouse *e = static_cast<EventMouse *>(event);
-//    AXLOG("onMouseMove detected, X:%f  Y:%f", e->getCursorX(), e->getCursorY());
-
-
+    auto *e = dynamic_cast<EventMouse *>(event);
     // running when action empty!
     auto weaponSprite = (Sprite *) this->getChildByTag(WEAPON_TAG);
     if (weaponSprite->getNumberOfRunningActions() <= 0) {
         weaponSprite->setPosition({e->getCursorX(), e->getCursorY()});
     }
-//    auto moveTarget = MoveTo::create(.2f, {e->getCursorX(), e->getCursorY()});
-//    weaponSprite->runAction(moveTarget);
 }
 
 #else
@@ -279,6 +271,7 @@ void GameScene::update(float delta) {
             }
 
             while (!hitPosition.empty()) {
+                // Take a position
                 auto pos = hitPosition.front();
                 if (pos > startSpace && pos < endSpace) {
                     auto boardPos = pos - startSpace;
@@ -288,11 +281,21 @@ void GameScene::update(float delta) {
 
                         // inner
                         if (auto gopher = gophers.find(posIndex);
-                                ((gopher != gophers.end()) && **(*gopher).second > 0)) {
+                                ((gopher != gophers.end()) && ((gopher->second)->getStatus() == GopherStatus::Show))) {
                             // Add score
                             updateScore(score + **((*gopher).second));
                             AXLOG("Score+ %d", **((*gopher).second));
                             // TODO wait play some hit action
+                            // unschedule timer
+
+                            std::stringstream ss;
+                            ss << "HIDE:";
+                            ss << posIndex.first;
+                            ss << ":";
+                            ss << posIndex.second;
+
+                            this->unschedule(ss.str());
+                            gopher->second->hide();
                         }
 
                     }
