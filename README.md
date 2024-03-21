@@ -1,8 +1,14 @@
 # MyLittleGameDemo
 
-## An Axmol Project HitGopher
+## An Axmol Project
 
 [x] Complete Score Calc
-[ ] Complete Mobile Platform
+[x] Complete Mobile Platform
 [ ] Add Background music for global scene
 [ ] Add Hit Voice to Gopher
+
+## Platform
+
+* Windows
+* Android
+

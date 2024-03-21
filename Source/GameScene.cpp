@@ -12,7 +12,16 @@
 #define BOARD_NUM 4
 
 #define RANDOM_POP_TIMER_NAME "RandomPopTimer"
-#define RANDOM_POP_TIMER_SPLIT 1.f
+
+#if IS_PC
+
+#define RANDOM_POP_TIMER_SPLIT .8f
+
+#else
+
+#define RANDOM_POP_TIMER_SPLIT .4f
+
+#endif
 
 USING_NS_AX;
 
@@ -208,7 +217,15 @@ void GameScene::onTouchesBegan(const std::vector<ax::Touch *> &touches, ax::Even
     auto weaponSprite = (Sprite *) this->getChildByTag(WEAPON_TAG);
     for (auto &&t: touches) {
         weaponSprite->setPosition(t->getLocation());
-        weaponSprite->runAction(createHitAction());
+
+        auto callbackHide = CallFunc::create([weaponSprite](){
+            weaponSprite->setVisible(false);
+        });
+
+        auto actionSequence = Sequence::create(createHitAction(), callbackHide, nullptr);
+        weaponSprite->runAction(actionSequence);
+        weaponSprite->setVisible(true);
+
         hitPosition.emplace(t->getLocation());
         AXLOG("onTouchesBegan detected, X:%f  Y:%f", t->getLocation().x, t->getLocation().y);
     }
