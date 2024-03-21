@@ -12,13 +12,7 @@ enum class GopherStatus {
     Show
 };
 
-class TimerAdapter {
-public:
-    virtual void func(float) = 0;
-};
-
-
-class GopherSprite : public ax::Sprite, public TimerAdapter {
+class GopherSprite : public ax::Sprite {
 
 public:
 
@@ -37,16 +31,11 @@ public:
 
     void pop(int score_) {
         if (status != GopherStatus::Show) {
-            score_ = score;
+            score = score_;
             status = GopherStatus::Show;
             updateDisplay();
             // timer to hide
         }
-    }
-
-    void func(float dt) {
-        AXLOG("call");
-        hide();
     }
 
     void hide() {
