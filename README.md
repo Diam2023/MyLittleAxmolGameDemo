@@ -1,6 +1,8 @@
 # MyLittleGameDemo
 
-## Just for fun, Use a night to make it
+## An Axmol Project HitGopher
 
-[ ] Complete Score Calc
+[x] Complete Score Calc
 [ ] Complete Mobile Platform
+[ ] Add Background music for global scene
+[ ] Add Hit Voice to Gopher
