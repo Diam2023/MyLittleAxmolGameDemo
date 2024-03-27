@@ -81,8 +81,6 @@ fabric.properties
 build
 proj.linux
 proj.ios_mac
-proj.winrt
-proj.wasm
 
 proj.android/app/src/org/axmol/lib/
 proj.android/app/release
