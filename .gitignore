@@ -84,7 +84,5 @@ proj.ios_mac
 proj.winrt
 proj.wasm
 
-run.bat.in
-proj.android/app/.cxx/
 proj.android/app/src/org/axmol/lib/
 proj.android/app/release
