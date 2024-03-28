@@ -10,8 +10,8 @@ echo Entering run.bat directory: %myDir%
 
 cd /d %myDir%
 
-set APP_NAME=MyGameDemo
-set BUILD_DIR=proj.android/app/.cxx/Debug/642sq523/arm64-v8a
+set APP_NAME=MyLittleAxmolGameDemo
+set BUILD_DIR=build
 set BUILD_CFG=%1
 
 rem Determine which build config to run
