@@ -25,7 +25,7 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(APP_NAME MyGameDemo)
+set(APP_NAME MyLittleAxmolGameDemo)
 
 project(${APP_NAME})
 
