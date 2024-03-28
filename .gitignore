@@ -84,3 +84,5 @@ proj.ios_mac
 
 proj.android/app/src/org/axmol/lib/
 proj.android/app/release
+proj.android/app/.cxx
+.idea/.name
